@@ -3,58 +3,231 @@
 %
 % Copyright 2014, 2019 Javier L. Gómez, University Carlos III of Madrid
 %
+% Modifyed by Luis Daniel Casais Mezquida, Universidad Carlos III de Madrid
+%
 % This work is licensed under a Creative Commons Attribution-ShareAlike 4.0
 % International License (https://creativecommons.org/licenses/by-sa/4.0/).
 
 \ProvidesPackage{SRS}
+
 \RequirePackage{pgffor}
 \RequirePackage{graphicx}
 \RequirePackage{array}
 \RequirePackage{calc}
+\RequirePackage{xparse}
+\RequirePackage{float}
+\RequirePackage{hyperref}
+\usepackage{xifthen}  % \isempty
+\RequirePackage{booktabs}  % \toprule, \bottomrule
+\RequirePackage{enumitem}
 
-% --8<---- Template texts (spanish). You can redefine these as follows:
-% \makeatletter
-% \def\@req@valueof@pc@l{Text}
-% \makeatother
 
-\def\NA{n/a}
-\def\@req@description{Descripci\'on:}
-\def\@req@priocus{Necesidad:}
-\def\@req@priodev{Prioridad:}
-\def\@req@sta{Estabilidad:}
-\def\@req@verif{Verificabilidad:}
-\def\@req@origin{Origen:}
-\def\@req@valueof@pc@h{Esencial}
-\def\@req@valueof@pc@m{Conveniente}
-\def\@req@valueof@pc@l{Opcional}
-\def\@req@valueof@pd@h{Alta}
-\def\@req@valueof@pd@m{Media}
-\def\@req@valueof@pd@l{Baja}
-\def\@req@valueof@s@nc{No cambia}
-\def\@req@valueof@s@c{Cambiante}
-\def\@req@valueof@s@vi{Muy inestable}
-\def\@req@valueof@v@h{Alta}
-\def\@req@valueof@v@m{Media}
-\def\@req@valueof@v@l{Baja}
-\def\@uc@name{Nombre:}
-\def\@uc@actors{Actores:}
-\def\@uc@shortdescription{Objetivo:}
-\def\@uc@description{Descripción:}
-\def\@uc@precond{Pre-condición:}
-\def\@uc@postcond{Post-condición:}
-\def\@component@role{Rol:}
-\def\@component@deps{Dependencias:}
-\def\@component@description{Descripción:}
-\def\@component@data{Datos:}
-\def\@component@resources{Recursos:}
-\def\@component@origin{Origen:}
-\def\@component@types{Tipos:}
-\def\@component@members{Funciones/variables:}
-\def\@test@description{Descripción:}
-\def\@test@input{Entrada:}
-\def\@test@output{Salida:}
-\def\@test@env{Entorno:}
-\def\@test@origin{Origen:}
+% PACKAGE OPTIONS
+
+% english
+\newif\if@langen@pp\@langen@ppfalse  % check en language
+\DeclareOption{en}{\@langen@pptrue}
+% spanish
+\newif\if@langes@pp\@langes@ppfalse  % check es language
+\DeclareOption{es}{\@langes@pptrue}
+
+% traceability
+\newif\if@traceability@pp\@traceability@ppfalse
+\DeclareOption{enableTraceability}{\@traceability@pptrue}
+
+% captions on tables
+\newif\if@captions@pp\@captions@ppfalse
+\DeclareOption{enableCaptions}{\@captions@pptrue}
+
+\ExecuteOptions{en}  % defaults
+\ProcessOptions\relax
+
+
+
+% --8<---- Template texts
+
+\newcommand\@na{N/A}
+\newcommand\NA{\@na}
+
+% english
+
+\if@langen@pp
+  \def\@req{Requirement}
+  \def\@req@u{User requirement}
+  \def\@req@s{Software requirement}
+  \def\@uc{Use case}
+  \def\@component{Component}
+  \def\@test{Test}
+
+
+  % template captions
+  \def\@req@template@u{\@req@u~template}
+  \def\@req@template@s{\@req@s~template}
+  \def\@uc@template{\@uc~template}
+  \def\@component@template{\@component~template}
+  \def\@test@template{\@test~template}
+
+  % attribute names
+  \def\@req@description{Description}
+  \def\@req@priocus{Necessity}
+  \def\@req@priodev{Priority}
+  \def\@req@sta{Stability}
+  \def\@req@verif{Verifiability}
+  \def\@req@origin{Origin}
+
+  \def\@uc@name{Name}
+  \def\@uc@actors{Actors}
+  \def\@uc@shortdescription{Objetive}
+  \def\@uc@description{Description}
+  \def\@uc@precond{Pre-condition}
+  \def\@uc@postcond{Post-condition}
+
+  \def\@component@role{Role}
+  \def\@component@deps{Dependencies}
+  \def\@component@description{Description}
+  \def\@component@data{Data}
+  \def\@component@resources{Resources}
+  \def\@component@origin{Origin}
+  \def\@component@types{Types}
+  \def\@component@members{Functions/variables}
+
+  % \def\@test@description{Description}
+  % \def\@test@input{Input}
+  % \def\@test@output{Output}
+  % \def\@test@env{Enviroment}
+  % \def\@test@origin{Origin}
+
+  \def\@test@desc{Description}
+  \def\@test@precond{Preconditions}
+  \def\@test@postcond{Postconditions}
+  \def\@test@procedure{Procedure}
+  \def\@test@eval{Evaluation}
+  \def\@test@origin{Origin}
+
+  % attribute values
+  \def\@req@valueof@pc@h{Essential}
+  \def\@req@valueof@pc@m{Convenient}
+  \def\@req@valueof@pc@l{Optional}
+  \def\@req@valueof@pd@h{High}
+  \def\@req@valueof@pd@m{Medium}
+  \def\@req@valueof@pd@l{Low}
+  \def\@req@valueof@s@nc{Constant}
+  \def\@req@valueof@s@c{Inconstant}
+  \def\@req@valueof@s@vi{Very unstable}
+  \def\@req@valueof@v@h{High}
+  \def\@req@valueof@v@m{Medium}
+  \def\@req@valueof@v@l{Low}
+
+  % attribute descriptions
+  \def\@req@description@desc{Detailed description of the requirement.}
+  \def\@req@priocus@desc{Priority of the requirement for the user (\textit{\@req@valueof@pc@h}, \textit{\@req@valueof@pc@m} or \textit{\@req@valueof@pc@l}).}
+  \def\@req@priodev@desc{Priority of the requirement for the developer (\textit{\@req@valueof@pd@h}, \textit{\@req@valueof@pd@m} or \textit{\@req@valueof@pd@l}).}
+  \def\@req@sta@desc{Indicates the requirement's variability trough the development process (\textit{\@req@valueof@s@nc}, \textit{\@req@valueof@s@c} or \textit{\@req@valueof@s@vi}).}
+  \def\@req@verif@desc{Ability to test the validity of the requirement (\textit{\@req@valueof@v@h}, \textit{\@req@valueof@v@m} or \textit{\@req@valueof@v@l}).}
+  \def\@req@origin@desc{User requirements that derived this requirement.}
+
+  \def\@uc@name@desc{Brief description of the use case.}
+  \def\@uc@actors@desc{External agent that executes the use case.}
+  \def\@uc@shortdescription@desc{The use case's purpose.}
+  \def\@uc@description@desc{Steps that the external agent must take to execute the use case.}
+  \def\@uc@precond@desc{Conditions that must be fulfilled \textit{before} executing the use case.}
+  \def\@uc@postcond@desc{Conditions that must be fulfilled \textit{after} executing the use case.}
+
+  \def\@component@role@desc{Component's function in the system.}
+  \def\@component@deps@desc{Components that depend on this component.}
+  \def\@component@description@desc{Explanation of the functioning of the component.}
+  \def\@component@data@desc{Input (\textit{in}) and output (\textit{out}) data of the component.}
+  \def\@component@resources@desc{Resources that use the component.}
+  \def\@component@origin@desc{Software requirements that derived the component.}
+  \def\@component@type@desc{Component type.}
+
+  \def\@test@desc@desc{Test description.}
+  \def\@test@precond@desc{Conditions that must be fulfilled in order to perform the test.}
+  \def\@test@procedure@desc{Description of the steps to take in order to perform the test.}
+  \def\@test@postcond@desc{Conditions that must be fulfilled after performing the test in order to pass.}
+  \def\@test@eval@desc{Result of the test (\textit{OK} or \textit{Error}).}
+  \def\@test@origin@desc{Requirements that originated this test.}
+\fi
+
+% spanish
+
+\if@langes@pp
+  \def\@req{Requisito}
+  \def\@req@u{\@req~de usuario}
+  \def\@req@s{\@req~de software}
+  \def\@uc{Caso de uso}
+  \def\@component{Componente}
+  \def\@test{Prueba}
+  % template captions
+  \def\@req@template@u{Plantilla de~\@req@u}
+  \def\@req@template@s{Plantilla de~\@req@s}
+  \def\@uc@template{Plantilla de \@uc}
+  \def\@component@template{Plantilla de~\@component}
+  \def\@test@template{Plantilla de~\@test}
+  % attribute names
+  \def\@req@description{Descripción}
+  \def\@req@priocus{Necesidad}
+  \def\@req@priodev{Prioridad}
+  \def\@req@sta{Estabilidad}
+  \def\@req@verif{Verificabilidad}
+  \def\@req@origin{Origen}
+  \def\@uc@name{Nombre}
+  \def\@uc@actors{Actores}
+  \def\@uc@shortdescription{Objetivo}
+  \def\@uc@description{Descripción}
+  \def\@uc@precond{Pre-condición}
+  \def\@uc@postcond{Post-condición}
+  \def\@component@role{Rol}
+  \def\@component@deps{Dependencias}
+  \def\@component@description{Descripción}
+  \def\@component@data{Datos}
+  \def\@component@resources{Recursos}
+  \def\@component@origin{Origen}
+  \def\@component@types{Tipos}
+  \def\@component@members{Funciones/variables}
+  % \def\@test@description{Descripción}
+  % \def\@test@input{Entrada}
+  % \def\@test@output{Salida}
+  % \def\@test@env{Entorno}
+  % \def\@test@origin{Origen}
+
+
+  % attribute values
+  \def\@req@valueof@pc@h{Esencial}
+  \def\@req@valueof@pc@m{Conveniente}
+  \def\@req@valueof@pc@l{Opcional}
+  \def\@req@valueof@pd@h{Alta}
+  \def\@req@valueof@pd@m{Media}
+  \def\@req@valueof@pd@l{Baja}
+  \def\@req@valueof@s@nc{No cambia}
+  \def\@req@valueof@s@c{Cambiante}
+  \def\@req@valueof@s@vi{Muy inestable}
+  \def\@req@valueof@v@h{Alta}
+  \def\@req@valueof@v@m{Media}
+  \def\@req@valueof@v@l{Baja}
+  % attribute descriptions
+  \def\@req@description@desc{Especificación del requisito en un lenguaje claro, conciso y no ambiguo.}
+  \def\@req@priocus@desc{Prioridad del requisito para el usuario (\textit{\@req@valueof@pc@h}, \textit{\@req@valueof@pc@m} or \textit{\@req@valueof@pc@l}).}
+  \def\@req@priodev@desc{Prioridad del requisito para el desarrollador (\textit{\@req@valueof@pd@h}, \textit{\@req@valueof@pd@m} or \textit{\@req@valueof@pd@l}).}
+  \def\@req@sta@desc{Indica si el requisito se modifica durante el desarrollo (\textit{\@req@valueof@s@nc}, \textit{\@req@valueof@s@c} or \textit{\@req@valueof@s@vi}).}
+  \def\@req@verif@desc{Capacidad de comprobar la validez del requisito (\textit{\@req@valueof@v@h}, \textit{\@req@valueof@v@m} or \textit{\@req@valueof@v@l}).}
+  \def\@req@origin@desc{Referencia a los requisitos de usuario que dieron lugar al requisito.}
+  \def\@uc@name@desc{Descripción breve del caso de uso.}
+  \def\@uc@actors@desc{Agente externo que ejecuta el caso de uso.}
+  \def\@uc@shortdescription@desc{Propósito del caso de uso.}
+  \def\@uc@description@desc{Pasos que debe seguir el actor para ejecutar el caso de uso.}
+  \def\@uc@precond@desc{Condiciones previas que se deben cumplir para ejecutar el caso de uso.}
+  \def\@uc@postcond@desc{Condiciones que se deben cumplir después de ejecutar el caso de uso.}
+  \def\@component@role@desc{Papel del componente en el sistema.}
+  \def\@component@deps@desc{Componentes que dependen de este.}
+  \def\@component@description@desc{Explicación del funcionamiento del componente.}
+  \def\@component@data@desc{Datos de entrada (\textit{in}) y salida (\textit{out}) del componente.}
+  \def\@component@resources@desc{Recursos que utiliza el componente.}
+  \def\@component@origin@desc{Requisitos software que dieron lugar al componente.}
+  \def\@component@type@desc{Tipo del componente.}
+  % TODO: \@test
+\fi
+
 
 % \@req@parseArgs - Parses string of the form `pc=h,pd=l,s=nc,v=m' and
 %                   sets \@@req@XX accordingly
@@ -66,7 +239,7 @@
 }
 
 % \itemizecsv - Typesets an itemize list using comma-separated values
-\def\@itemizecsv@empty{\NA}
+\def\@itemizecsv@empty{\@na}
 \def\@itemizecsv@style{}
 \newcommand{\itemizecsv}[1]
            {\if\relax\detokenize{#1}\relax \@itemizecsv@empty%
@@ -77,7 +250,7 @@
 \def\@traceability@registerOrigin#1{}
 \def\@traceability@addOrigins#1#2{}
 
-\DeclareOption{enableTraceability}{
+\if@traceability@pp
   \directlua{
     __registered_origin = {}
     __is_origin_of = {}
@@ -117,12 +290,12 @@
         \unexpanded{
         tex.print([[\begin{traceabilityMatrix}{l|*{]] .. o_count .. [[}{c|}}]])
         for i = 1+o_offset, o_offset+o_count do
-            tex.print([[&\traceabilityMatrixHeader{]] .. origins[i] .. [[}]])
+            tex.print([[&\traceabilityMatrixHeader{]] .. "\\hyperref[req:" .. origins[i] .. "]{" .. origins[i] .. "}}")
         end
         tex.print([[\\ \hline]])
 
         for i = 1+i_offset, i_offset+i_count do
-            tex.print(items[i])
+            tex.print("\\hyperref[req:" .. items[i] .. "]{" .. items[i] .. "}")
             for j = 1+o_offset, o_offset+o_count do
                 tex.print([[&]])
                 if __is_origin_of[items[i]][origins[j]] then
@@ -154,44 +327,88 @@
   \gdef\traceabilityPrintMatrix#1#2#3{%
     \directlua{__print_matrix('\unexpanded{#1}', '\unexpanded{#2}',
                               \string{#3\string})}}
-  
+  % TODO: allow to define type for ref: req/uc/comp
+
   % redefine these macros to change table style
   \newenvironment{traceabilityMatrix}[1]
                  {\footnotesize\renewcommand{\arraystretch}{1.5}
                    \begin{tabular}{#1}}
                  {\end{tabular}}
   \newcommand{\traceabilityMatrixHeader}[1]
-             {\multicolumn{1}{c}{\rlap{\rotatebox{45}{#1}}\rule{\widthof{\traceabilityMatrixChar}}{0pt}}}
+             {\multicolumn{1}{c}{\rlap{\rotatebox{45}{#1}}\rule{\widthof{\traceabilityMatrixChar}*\real{2}}{0pt}}}
   \gdef\traceabilityMatrixChar{\bullet}
-}
+\fi
+
 
 % --8<---- TEMPLATE DEFINITIONS ----
-\newenvironment{SRStabular}[1]
-               {\renewcommand{\arraystretch}{1.5}
-                 \setlength{\arrayrulewidth}{2pt}
-                 \noindent\begin{tabular}{@{}p{64pt}@{}p{\columnwidth-64pt}@{}}
-                 \multicolumn{2}{@{}l}{\bfseries#1}\\ \hline}
-               {\end{tabular}\bigskip}
+% \begin{SRStabular}[caption][label][position][width]{id}
+\NewDocumentEnvironment{SRStabular}{o o O{h} O{.85} m}{%
+    \begin{table}[#3]
+      \centering
+      \IfNoValueTF{#1}%
+        {}
+        {\caption{#1}}  % add caption
+      \IfNoValueTF{#2}%
+        {\label{req:#5}}  % default label
+        { \ifthenelse{\isempty{#2}}
+          {\label{req:#5}}
+          {\label{#2}}  % custom label
+        }
+      \renewcommand{\arraystretch}{1.5}
+      \noindent
+      \begin{tabular}{@{}p{83pt}@{}p{#4\columnwidth-83pt}@{}}
+        %
+        \toprule
+        \multicolumn{2}{@{}l}{\bfseries#5}\\
+        \hline
+   }
+   {%
+        \bottomrule
+      \end{tabular}
+    \end{table}
+  }
 
 \newenvironment{baseReq}[2]  % extender is responsible for adding \endSRStabular
-               {\traceability@registerOrigin{#1} \@req@parseArgs #2;
-                 \SRStabular{#1}
-                 \@req@description & }
-               {\\
-                 \@req@priocus & \@@req@pc \\
-                 \@req@priodev & \@@req@pd \\
-                 \@req@sta     & \@@req@s \\
-                 \@req@verif   & \@@req@v \\}
+  {%
+    \traceability@registerOrigin{#1} \@req@parseArgs #2;
+    \if@captions@pp
+      \SRStabular[\@req~#1]{#1}
+    \else
+      \SRStabular{#1}
+    \fi
+    \textbf{\@req@description} &%
+  }%
+  {%
+    \\
+    \textbf{\@req@priocus} & \@@req@pc \\
+    \textbf{\@req@priodev} & \@@req@pd \\
+    \textbf{\@req@sta}     & \@@req@s \\
+    \textbf{\@req@verif}   & \@@req@v \\
+  }%
 
-% Usage: \begin{userReq}{<ID>}{pc=X,pd=Y,s=Z,v=A}
+
+% Usage: \begin[<caption>]{userReq}{<ID>}{pc=X,pd=Y,s=Z,v=A}
 %        ...
 %        \end{userReq}
 %
 % <X>, <Y> and <A> may be one of 'h', 'm', 'l'; high, medium, low
 %               (respectively); <Z> may be 'nc', 'c', 'vi'
+% <caption> is optional
 \newenvironment{userReq}[2]
-               {\baseReq{#1}{#2}}
-               {\endbaseReq\endSRStabular}
+  {\baseReq{#1}{#2}}
+  {\endbaseReq\endSRStabular}
+
+
+% \printureqtemplate[caption]{id-format}
+\newcommand{\printureqtemplate}[2][\@req@template@u]{%
+  \begin{SRStabular}[#1][tab:ur-template]{#2}
+    \textbf{\@req@description} & \@req@description@desc\\
+    \textbf{\@req@priocus}     & \@req@priocus@desc \\
+    \textbf{\@req@priodev}     & \@req@priodev@desc \\
+    \textbf{\@req@sta}         & \@req@sta@desc \\
+    \textbf{\@req@verif}       & \@req@verif@desc \\
+  \end{SRStabular}
+}
 
 % Usage: \begin{softwareReq}{<ID>}{pc=X,pd=Y,s=Z,v=A}{<ORIGIN LIST>}
 %        ...
@@ -200,74 +417,190 @@
 % <X>, <Y> and <A> may be one of 'h', 'm', 'l'; high, medium, low
 %               (respectively); <Z> may be 'nc', 'c', 'vi'
 \newenvironment{softwareReq}[3]
-               {\traceability@addOrigins{#1}{#3}\def\@@req@origin{#3}
-                 \baseReq{#1}{#2}}
-               {\endbaseReq
-                 \@req@origin & \@@req@origin \\ \endSRStabular}
+  {%
+    \traceability@addOrigins{#1}{#3}\def\@@req@origin{#3}
+    \baseReq{#1}{#2}
+  }
+  {%
+    \endbaseReq
+    \textbf{\@req@origin} & \hyperref[req:\@@req@origin]  {\@@req@origin} \\  % TODO: process multiple origins
+    \endSRStabular
+  }
+
+
+% \printsreqtemplate[caption]{id-format}
+\newcommand{\printsreqtemplate}[2][\@req@template@s]{%
+  \begin{SRStabular}[#1][tab:sr-template]{#2}
+    \textbf{\@req@description} & \@req@description@desc\\
+    \textbf{\@req@priocus}     & \@req@priocus@desc \\
+    \textbf{\@req@priodev}     & \@req@priodev@desc \\
+    \textbf{\@req@sta}         & \@req@sta@desc \\
+    \textbf{\@req@verif}       & \@req@verif@desc \\
+    \textbf{\@req@origin}      & \@req@origin@desc \\
+  \end{SRStabular}
+}
+
 
 % Usage: \begin{useCase}{<ID>}{<NAME>}{<ACTORS>}{<SHORT_DESCRIPTION>}
 %                       {<PRE_COND>}{<POST_COND>}
 %        ...
 %        \end{useCase}
 \newenvironment{useCase}[6]
-               {\def\@@uc@precond{#5}\def\@@uc@postcond{#6}
-                 \SRStabular{#1}
-                 \@uc@name             & #2 \\
-                 \@uc@actors           & #3 \\
-                 \@uc@shortdescription & #4 \\
-                 \@uc@description      & }
-               {\\
-                 \@uc@precond  & \@@uc@precond \\
-                 \@uc@postcond & \@@uc@postcond \\
-                 \endSRStabular}
+  {
+    \def\@@uc@precond{#5}\def\@@uc@postcond{#6}
+    \if@captions@pp
+      \SRStabular[\@uc~#1][uc:#1][htb][.9]{#1}
+    \else
+      \SRStabular[][][htb][.9]{#1}
+    \fi
+      \textbf{\@uc@name}             & #2 \\
+      \textbf{\@uc@actors}           & #3 \\
+      \textbf{\@uc@shortdescription} & #4 \\
+      \textbf{\@uc@description}      &%
+  }
+  {%
+      \makeatother\\
+      \textbf{\@uc@precond}          & \@@uc@precond \\
+      \textbf{\@uc@postcond}         & \@@uc@postcond \\
+    \endSRStabular
+  }
+
+% \printuctemplate[caption]{id-format}
+\newcommand{\printuctemplate}[2][\@uc@template]{%
+  \begin{SRStabular}[#1][tab:uc-template][htb][.9]{#2}
+    \textbf{\@uc@name}              & \@uc@name@desc\\
+    \textbf{\@uc@actors}            & \@uc@actors@desc \\
+    \textbf{\@uc@shortdescription}  & \@uc@shortdescription@desc \\
+    \textbf{\@uc@description}       & \@uc@description@desc \\
+    \textbf{\@uc@precond}           & \@uc@precond@desc \\
+    \textbf{\@uc@postcond}          & \@uc@postcond@desc \\
+  \end{SRStabular}
+}
+
 
 \newenvironment{baseComponent}[3]
-               {\SRStabular{#1}
-                 \@component@role & #2 \\
-                 \@component@deps & #3 \\}
-               {\endSRStabular}
+  {
+    \if@captions@pp
+      \SRStabular[\@component~`#1']{#1}
+      % \SRStabular[\@component~`#1'][comp:#1]{#1}
+    \else
+      \SRStabular{#1}
+    \fi
+    \textbf{\@component@role} & #2 \\
+    \textbf{\@component@deps} & #3 \\
+  }
+  {\endSRStabular}
 
-% Usage: \begin{component}{<ID>}{<ROLE>}{<DEPS>}{<DATA>}{<RESOURCES>}{<ORIGIN>}
+
+% Usage: \begin{component}{<ID>}{<ROLE>}{<DEPS>}{<IN-DATA>}{<OUT-DATA>}{<ORIGIN>}
 %        ...
 %        \end{component}
 \newenvironment{component}[6]
-               {\traceability@addOrigins{#1}{#6}
-                 \def\@@component@data{#4}\def\@@component@resources{#5}
-                 \def\@@component@origin{#6}
-                 \begin{baseComponent}{#1}{#2}{#3}
-                   \@component@description & }
-               {\\
-                 \@component@data
-                 & \expandafter\itemizecsv\expandafter{\@@component@data} \\
-                 \@component@resources
-                 & \expandafter\itemizecsv\expandafter{\@@component@resources}\\
-                 \@component@origin
-                 & \@@component@origin \\
-                 \end{baseComponent}}
+  {
+    \traceability@addOrigins{#1}{#6}
+    \def\@@component@data@in{#4}
+    \def\@@component@data@out{#5}
+    \def\@@component@origin{#6}
+    \begin{baseComponent}{#1}{#2}{#3}
+      \textbf{\@component@description} &%
+  }
+  {%
+      \\
+      \textbf{\@component@data}      &%
+      \begin{itemize}[leftmargin=*, nosep]
+        \item \textbf{in:} \@@component@data@in
+        \item \textbf{out:} \@@component@data@out
+      \end{itemize}\\
+      \textbf{\@component@origin}    & \@@component@origin \\
+    \end{baseComponent}
+  }
+
+
+% \printcomptemplate[caption]{id-format}
+\newcommand{\printcomptemplate}[2][\@component@template]{%
+  \begin{SRStabular}[#1][tab:comp-template]{#2}
+    \textbf{\@component@role}         & \@component@role@desc\\
+    \textbf{\@component@deps}         & \@component@deps@desc \\
+    \textbf{\@component@description}  & \@component@description@desc \\
+    \textbf{\@component@data}         & \@component@data@desc \\
+    \textbf{\@component@origin}       & \@component@origin@desc \\
+  \end{SRStabular}
+}
 
 \newenvironment{subComponent}[4]
-               {\begin{baseComponent}{#1}{#2}{#3}
-                   \@component@types
-                   & \def\@itemizecsv@style{\ttfamily}\itemizecsv{#4} \\
-                   \@component@members & \hangindent=10pt\hangafter=1\ttfamily}
-               {\\
-               \end{baseComponent}}
+  {
+    \begin{baseComponent}{#1}{#2}{#3}
+    \textbf{\@component@types}       & \def\@itemizecsv@style{\ttfamily}\itemizecsv{#4} \\
+    \textbf{\@component@members}     & \hangindent=10pt\hangafter=1\ttfamily
+  }
+  {\\\end{baseComponent}}
 
-% Usage: \begin{testCase}{<ID>}{<INPUT>}{<OUTPUT>}{<ENV>}{<ORIGIN>}
-%        ...
+% TODO: \printsubcomptemplate[caption]{id-format}
+
+
+
+% % Usage: \begin{testCase}{<ID>}{<INPUT>}{<OUTPUT>}{<ENV>}{<ORIGIN>}
+% %        ...
+% %        \end{testCase}
+% \newenvironment{testCase}[5]
+%   {
+%     \def\@@test@input{#2}\def\@@test@output{#3}\def\@@test@env{#4}
+%     \traceability@addOrigins{#1}{#5}\def\@@test@origin{#5}
+%     \SRStabular{#1}
+%     \@test@description &
+%   }
+%   {
+%     \\
+%     \textbf{\@test@input}  & \@@test@input \\
+%     \textbf{\@test@output} & \@@test@output \\
+%     \textbf{\@test@origin} & \@@test@origin \\
+%     \textbf{\@test@env}    & \expandafter\itemizecsv\expandafter{\@@test@env} \\
+%     \endSRStabular
+%   }
+
+
+
+% Usage: \begin{testCase}{<ID>}{<PRECOND>}{<POSTCON>}{<DESCR>}{<EVAL>}{<ORIGIN>}
+%        <PROCEDURE>
 %        \end{testCase}
-\newenvironment{testCase}[5]
-               {\def\@@test@input{#2}\def\@@test@output{#3}\def\@@test@env{#4}
-                 \traceability@addOrigins{#1}{#5}\def\@@test@origin{#5}
-                 \SRStabular{#1}
-                 \@test@description & }
-               {\\
-                 \@test@input  & \@@test@input \\
-                 \@test@output & \@@test@output \\
-                 \@test@origin & \@@test@origin \\
-                 \@test@env
-                 & \expandafter\itemizecsv\expandafter{\@@test@env} \\
-                 \endSRStabular}
+\newenvironment{testCase}[6]
+  {
+    \def\@@test@precond{#2}
+    \def\@@test@postcond{#3}
+    \def\@@test@desc{#4}
+    \def\@@test@eval{#5}
+    \def\@@test@origin{#6}
+    \traceability@addOrigins{#1}{#6}
+    % \SRStabular{#1}
+    \if@captions@pp
+      \SRStabular[\@test~#1][][htb][.9]{#1}
+    \else
+      \SRStabular[][][htb][.9]{#1}
+    \fi
+    \textbf{\@test@desc} & \@@test@desc \\
+    \textbf{\@test@precond}  & \@@test@precond \\
+    \textbf{\@test@procedure} &
+  }
+  {
+    \\
+    \textbf{\@test@postcond} & \@@test@postcond \\
+    \textbf{\@test@origin} & \@@test@origin \\  % TODO: process & ref multiple origins
+    \textbf{\@test@eval} & \@@test@eval \\  % TODO: standarize eval values
+    \endSRStabular
+  }
 
-\ProcessOptions\relax
+% \printtesttemplate[caption]{id-format}
+\newcommand{\printtesttemplate}[2][\@test@template]{%
+  \begin{SRStabular}[#1][tab:test-template]{#2}
+    \textbf{\@test@desc}       & \@test@desc@desc\\
+    \textbf{\@test@precond}    & \@test@precond@desc \\
+    \textbf{\@test@procedure}  & \@test@procedure@desc \\
+    \textbf{\@test@postcond}   & \@test@postcond@desc \\
+    \textbf{\@test@origin}     & \@test@origin@desc \\
+    \textbf{\@test@eval}       & \@test@eval@desc \\
+  \end{SRStabular}
+}
+
+
+
 \endinput
