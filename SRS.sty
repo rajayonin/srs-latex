@@ -111,12 +111,6 @@
   \def\@component@types{Types}
   \def\@component@members{Functions/variables}
 
-  % \def\@test@description{Description}
-  % \def\@test@input{Input}
-  % \def\@test@output{Output}
-  % \def\@test@env{Enviroment}
-  % \def\@test@origin{Origin}
-
   \def\@test@desc{Description}
   \def\@test@precond{Preconditions}
   \def\@test@postcond{Postconditions}
@@ -131,9 +125,9 @@
   \def\@req@valueof@pd@h{High}
   \def\@req@valueof@pd@m{Medium}
   \def\@req@valueof@pd@l{Low}
-  \def\@req@valueof@s@nc{Constant}
-  \def\@req@valueof@s@c{Inconstant}
-  \def\@req@valueof@s@vi{Very unstable}
+  \def\@req@valueof@s@c{Constant}
+  \def\@req@valueof@s@i{Inconstant}
+  \def\@req@valueof@s@vu{Very unstable}
   \def\@req@valueof@v@h{High}
   \def\@req@valueof@v@m{Medium}
   \def\@req@valueof@v@l{Low}
@@ -142,7 +136,7 @@
   \def\@req@description@desc{Detailed description of the requirement.}
   \def\@req@priocus@desc{Priority of the requirement for the user (\textit{\@req@valueof@pc@h}, \textit{\@req@valueof@pc@m} or \textit{\@req@valueof@pc@l}).}
   \def\@req@priodev@desc{Priority of the requirement for the developer (\textit{\@req@valueof@pd@h}, \textit{\@req@valueof@pd@m} or \textit{\@req@valueof@pd@l}).}
-  \def\@req@sta@desc{Indicates the requirement's variability trough the development process (\textit{\@req@valueof@s@nc}, \textit{\@req@valueof@s@c} or \textit{\@req@valueof@s@vi}).}
+  \def\@req@sta@desc{Indicates the requirement's variability trough the development process (\textit{\@req@valueof@s@c}, \textit{\@req@valueof@s@c} or \textit{\@req@valueof@s@vu}).}
   \def\@req@verif@desc{Ability to test the validity of the requirement (\textit{\@req@valueof@v@h}, \textit{\@req@valueof@v@m} or \textit{\@req@valueof@v@l}).}
   \def\@req@origin@desc{User requirements that derived this requirement.}
 
@@ -169,6 +163,7 @@
   \def\@test@origin@desc{Requirements that originated this test.}
 \fi
 
+
 % spanish
 
 \if@langes@pp
@@ -178,10 +173,12 @@
   \def\@uc{Caso de uso}
   \def\@component{Componente}
   \def\@test{Prueba}
+
   % prefix IDs
   \def\@req@u@prefix{RU}
   \def\@req@s@prefix{RS}
   \def\@uc@prefix{CU}
+
   % template captions
   \def\@req@template@u{Plantilla de~\@req@u}
   \def\@req@template@s{Plantilla de~\@req@s}
@@ -199,6 +196,7 @@
   \def\@component@template@description{contiene la plantilla utilizada para la especificación de los componentes, incluyendo la descripción de cada atributo.}
   \def\@test@template@id@description{Cada caso de prueba se identifica con un ID que sigue el formato \textit{\printtestidtemplate}, donde \textit{XX} identifica el número de secuencia del caso de prueba, empezando en \textit{01}, y \textit{YYY} representa el tipo, ya sea \textit{VET} (verificación) o \textit{VAT} (validación).}
   \def\@test@template@description{contiene la plantilla utilizada para la especificación de los casos de prueba, incluyendo la descripción de cada atributo.}
+
   % attribute names
   \def\@req@description{Descripción}
   \def\@req@priocus{Necesidad}
@@ -206,12 +204,14 @@
   \def\@req@sta{Estabilidad}
   \def\@req@verif{Verificabilidad}
   \def\@req@origin{Origen}
+
   \def\@uc@name{Nombre}
   \def\@uc@actors{Actores}
   \def\@uc@shortdescription{Objetivo}
   \def\@uc@description{Descripción}
   \def\@uc@precond{Pre-condición}
   \def\@uc@postcond{Post-condición}
+
   \def\@component@role{Rol}
   \def\@component@deps{Dependencias}
   \def\@component@description{Descripción}
@@ -220,12 +220,12 @@
   \def\@component@origin{Origen}
   \def\@component@types{Tipos}
   \def\@component@members{Funciones/variables}
-  % \def\@test@description{Descripción}
-  % \def\@test@input{Entrada}
-  % \def\@test@output{Salida}
-  % \def\@test@env{Entorno}
-  % \def\@test@origin{Origen}
 
+  \def\@test@description{Descripción}
+  \def\@test@input{Entrada}
+  \def\@test@output{Salida}
+  \def\@test@env{Entorno}
+  \def\@test@origin{Origen}
 
   % attribute values
   \def\@req@valueof@pc@h{Esencial}
@@ -234,25 +234,28 @@
   \def\@req@valueof@pd@h{Alta}
   \def\@req@valueof@pd@m{Media}
   \def\@req@valueof@pd@l{Baja}
-  \def\@req@valueof@s@nc{No cambia}
-  \def\@req@valueof@s@c{Cambiante}
-  \def\@req@valueof@s@vi{Muy inestable}
+  \def\@req@valueof@s@c{No cambia}
+  \def\@req@valueof@s@i{Cambiante}
+  \def\@req@valueof@s@vu{Muy inestable}
   \def\@req@valueof@v@h{Alta}
   \def\@req@valueof@v@m{Media}
   \def\@req@valueof@v@l{Baja}
+
   % attribute descriptions
   \def\@req@description@desc{Especificación del requisito en un lenguaje claro, conciso y no ambiguo.}
   \def\@req@priocus@desc{Prioridad del requisito para el usuario (\textit{\@req@valueof@pc@h}, \textit{\@req@valueof@pc@m} u \textit{\@req@valueof@pc@l}).}
   \def\@req@priodev@desc{Prioridad del requisito para el desarrollador (\textit{\@req@valueof@pd@h}, \textit{\@req@valueof@pd@m} o \textit{\@req@valueof@pd@l}).}
-  \def\@req@sta@desc{Indica si el requisito se modifica durante el desarrollo (\textit{\@req@valueof@s@nc}, \textit{\@req@valueof@s@c} o \textit{\@req@valueof@s@vi}).}
+  \def\@req@sta@desc{Indica si el requisito se modifica durante el desarrollo (\textit{\@req@valueof@s@c}, \textit{\@req@valueof@s@c} o \textit{\@req@valueof@s@vu}).}
   \def\@req@verif@desc{Capacidad de comprobar la validez del requisito (\textit{\@req@valueof@v@h}, \textit{\@req@valueof@v@m} o \textit{\@req@valueof@v@l}).}
   \def\@req@origin@desc{Referencia a los requisitos de usuario que dieron lugar al requisito.}
+
   \def\@uc@name@desc{Descripción breve del caso de uso.}
   \def\@uc@actors@desc{Agente externo que ejecuta el caso de uso.}
   \def\@uc@shortdescription@desc{Propósito del caso de uso.}
   \def\@uc@description@desc{Pasos que debe seguir el actor para ejecutar el caso de uso.}
   \def\@uc@precond@desc{Condiciones previas que se deben cumplir para ejecutar el caso de uso.}
   \def\@uc@postcond@desc{Condiciones que se deben cumplir después de ejecutar el caso de uso.}
+
   \def\@component@role@desc{Papel del componente en el sistema.}
   \def\@component@deps@desc{Componentes que dependen de este.}
   \def\@component@description@desc{Explicación del funcionamiento del componente.}
@@ -260,7 +263,17 @@
   \def\@component@resources@desc{Recursos que utiliza el componente.}
   \def\@component@origin@desc{Requisitos software que dieron lugar al componente.}
   \def\@component@type@desc{Tipo del componente.}
-  % TODO: \@test
+
+
+  \def\@test@desc@desc{Descripción del test.}
+  \def\@test@precond@desc{
+    Condiciones que deben cumplirse para realizar el test.}
+  \def\@test@procedure@desc{
+    Descripción de los pasos a seguir para realizar el test.}
+  \def\@test@postcond@desc{
+    Condiciones que deben cumplirse después de realizar el test para pasarlo.}
+  \def\@test@eval@desc{Resultado del test (\textit{OK} or \textit{Error}).}
+  \def\@test@origin@desc{Requisitos que originaron el test.}
 \fi
 
 
@@ -374,9 +387,10 @@
              {\multicolumn{1}{c}{\rlap{\rotatebox{45}{#1}}\rule{\widthof{\traceabilityMatrixChar}*\real{2}}{0pt}}}
   \gdef\traceabilityMatrixChar{\bullet}
 
+  % Traceability matrix shorthands
   \newcommand{\traceabilityFNCA}{\directlua{__print_matrix('^\@req@s@prefix\unexpanded{\37-FN}', '^\@req@u@prefix\unexpanded{\37-CA}')}}
   \newcommand{\traceabilityNFRE}{\directlua{__print_matrix('^\@req@s@prefix\unexpanded{\37-NF}', '^\@req@u@prefix\unexpanded{\37-RE}')}}
-  \newcommand{\traceabilityCompFN}{\directlua{__print_matrix('^[^\@req@u@prefix][^\@req@s@prefix][^\@uc@prefix][^-]\unexpanded{\37-}', '^\@req@s@prefix\unexpanded{\37-FN}')}}
+  \newcommand{\traceabilityCompFN}{\directlua{__print_matrix('^[^\@req@u@prefix][^\@req@s@prefix][^\@uc@prefix][^\unexpanded{\37-}]', '^\@req@s@prefix\unexpanded{\37-FN}')}}
   \newcommand{\traceabilityVETSR}{\directlua{__print_matrix('^VET', '^\@req@s@prefix')}}
   \newcommand{\traceabilityVATUR}{\directlua{__print_matrix('^VAT', '^\@req@u@prefix')}}
 \fi
@@ -423,20 +437,23 @@
 
 \newcommand{\padtwo}[1]{\ifnum\value{#1}<10 0\fi\arabic{#1}}
 
-% Create a new ID based on the prefix and internal name, using the format <PREFIX>-<N>
-% This is achieved by creating a new macro with the name <PREFIX>-<INTERNAL NAME>
+% Create a new ID based on the prefix and reference name, using the format <PREFIX>-<N>
+% This is achieved by creating a new macro with the name <PREFIX>-<reference NAME>
 % that expands to <PREFIX>-<N>
 \newcommand\setID[2]{\newcounterOrIncrement{#1}\csxdef{#1-#2}{#1-\padtwo{#1}}}
 % Use the macro created by the command above
 \newcommand\useID[1]{\if@debug@pp#1\else\csuse{#1}\fi}
 
-% Translate a comma separated list of internal IDs to displayed IDs, using a
+% Translate a comma separated list of reference IDs to displayed IDs, using a
 % given prefix
 % \translateIDs{prefix}{IDs}
 \newcommand\translateIDs[2]{%
   \xdef\@@translate@buf{}
   \foreach [count=\i] \x in {#2} {\xdef\@@translate@buf{\@@translate@buf\ifnum\i>1,\fi\useID{#1-\x}}}
 }
+
+
+%% REQUIREMENTS %%
 
 \newenvironment{baseReq}[3]  % extender is responsible for adding \endSRStabular
   {%
@@ -467,12 +484,11 @@
 % <X>, <Y> and <A> may be one of 'h', 'm', 'l'; high, medium, low
 %               (respectively); <Z> may be 'nc', 'c', 'vi'
 % <caption> is optional
-% <type>-<ID> is the ID used internally, but it is displayed as <ID-prefix><N>
+% <type>-<ID> is the ID used referencely, but it is displayed as <ID-prefix><N>
 %               where <N> is a sequential number for each different prefix
 \newenvironment{userReq}[3]
   {\baseReq{\@req@u@prefix-#1}{#2}{#3}}
   {\endbaseReq\endSRStabular}
-
 
 % \printureqtemplate[caption]
 \newcommand{\printureqtemplate}[1][\@req@template@u]{%
@@ -489,6 +505,9 @@
   \end{SRStabular}
 }
 
+\newcommand{\printureqidtemplate}{\@req@u@prefix-YY-XX}
+
+
 % Usage: \begin{softwareReq}{<type>}{<ID>}{pc=X,pd=Y,s=Z,v=A}{<ORIGIN LIST>}
 %        ...
 %        \end{softwareReq}
@@ -496,7 +515,7 @@
 % <type> may be one of 'CA' (capacity) or 'RE' (restriction)
 % <X>, <Y> and <A> may be one of 'h', 'm', 'l'; high, medium, low
 %               (respectively); <Z> may be 'nc', 'c', 'vi'
-% <type>-<ID> is the ID used internally, but it is displayed as <ID-prefix><N>
+% <type>-<ID> is the ID used referencely, but it is displayed as <ID-prefix><N>
 %             where <N> is a sequential number for each different prefix
 % <ORIGIN LIST> should be a comma-separated list of tuples <ID-prefix>-<ID>
 \newenvironment{softwareReq}[4]
@@ -529,6 +548,11 @@
   \end{SRStabular}
 }
 
+\newcommand{\printsreqidtemplate}{\@req@u@prefix-YY-XX}
+
+
+
+%% USE CASES %%
 
 % Usage: \begin{useCase}{<ID>}{<NAME>}{<ACTORS>}{<SHORT_DESCRIPTION>}
 %                       {<PRE_COND>}{<POST_COND>}
@@ -537,11 +561,10 @@
 \newenvironment{useCase}[6]
   {
     \setID{\@uc@prefix}{#1}
-    \def\@@baseReq@ID{\useID{\@uc@prefix-#1}}
     \def\@@uc@precond{#4}\def\@@uc@postcond{#5}
-    \def\@@uc@id{\@uc@prefix-#1}
+    \def\@@uc@id{\useID{\@uc@prefix-#1}}
     \if@captions@pp
-      \SRStabular[\@uc\@@uc@id1][uc:\@@uc@id][htb][.9]{\@@uc@id}
+      \SRStabular[\@uc~\@@uc@id][uc:\@@uc@id][htb][.9]{\@@uc@id}
     \else
       \SRStabular[][uc:\@@uc@id][htb][.9]{\@@uc@id}
     \fi
@@ -573,12 +596,17 @@
   \end{SRStabular}
 }
 
+\newcommand{\printucidtemplate}{\@uc@prefix-YY-XX}
+
+
+
+%% COMPONENTS %%
 
 \newenvironment{baseComponent}[3]
   {
     \if@captions@pp
-      \SRStabular[\@component~`#1']{#1}
-      % \SRStabular[\@component~`#1'][comp:#1]{#1}
+      % \SRStabular[\@component~`#1']{#1}
+      \SRStabular[\@component~`#1'][comp:#1]{#1}
     \else
       \SRStabular{#1}
     \fi
@@ -638,26 +666,7 @@
 
 
 
-% % Usage: \begin{testCase}{<ID>}{<INPUT>}{<OUTPUT>}{<ENV>}{<ORIGIN>}
-% %        ...
-% %        \end{testCase}
-% \newenvironment{testCase}[5]
-%   {
-%     \def\@@test@input{#2}\def\@@test@output{#3}\def\@@test@env{#4}
-%     \traceability@addOrigins{#1}{#5}\def\@@test@origin{#5}
-%     \SRStabular{#1}
-%     \@test@description &
-%   }
-%   {
-%     \\
-%     \textbf{\@test@input}  & \@@test@input \\
-%     \textbf{\@test@output} & \@@test@output \\
-%     \textbf{\@test@origin} & \@@test@origin \\
-%     \textbf{\@test@env}    & \expandafter\itemizecsv\expandafter{\@@test@env} \\
-%     \endSRStabular
-%   }
-
-
+%% TEST CASES %%
 
 % Usage: \begin{testCase}{<type>}{<ID>}{<PRECOND>}{<POSTCON>}{<DESCR>}{<EVAL>}{<ORIGIN>}
 %        <PROCEDURE>
@@ -707,23 +716,26 @@
   \end{SRStabular}
 }
 
-% References to elements
+\newcommand{\printtestidtemplate}{YYY-XX}
+
+
+
+%% REFERENCES %%
 
 % \ureqref[prefix]{ID}
 \newcommand{\ureqref}[2][\@req]{\hyperref[req:\useID{\@req@u@prefix-#2}]{#1 \useID{\@req@u@prefix-#2}}}
+
 % \sreqref[prefix]{ID}
 \newcommand{\sreqref}[2][\@req]{\hyperref[req:\useID{\@req@s@prefix-#2}]{#1 \useID{\@req@s@prefix-#2}}}
 
 % \ucref[prefix]{ID}
-\newcommand{\ucref}[2][\@uc]{\hyperref[uc:\useID{#2}]{#1 \useID{#2}}}
+\newcommand{\ucref}[2][\@uc]{\hyperref[uc:\useID{\@uc@prefix-#2}]{#1 \useID{\@uc@prefix-#2}}}
 
 % \testref[prefix]{ID}
-\newcommand{\testref}[2][\@uc]{\hyperref[test:#2]{#1 #2}}
+\newcommand{\testref}[2][\@test]{\hyperref[test:\useID{#2}]{#1 \useID{#2}}}
 
-\newcommand{\printureqidtemplate}{\@req@u@prefix-YY-XX}
-\newcommand{\printsreqidtemplate}{\@req@s@prefix-YY-XX}
-\newcommand{\printucidtemplate}{\@uc@prefix-YY-XX}
-\newcommand{\printtestidtemplate}{YYY-XX}
+% \compref[prefix]{ID}
+\newcommand{\compref}[2][\@component]{\hyperref[comp:#2]{#1 `#2'}}
 
 
 \endinput
