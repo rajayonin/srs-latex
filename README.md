@@ -13,9 +13,9 @@ If you have any question, please send an e-mail to `luisdaniel.casais [at] alumn
 
 
 ## Usage
-First, store the `SRS.sty` file in the same directory as your main `.tex` file, and include the package:
+First, store the [`srs.sty`](srs.sty) file in the same directory as your main `.tex` file, and include the package:
 ```latex
-\usepackage[en,enableTraceability,enableCaptions]{SRS}
+\usepackage[en,enableTraceability,enableCaptions]{srs}
 ```
 
 ### Configuration
