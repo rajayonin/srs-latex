@@ -9,7 +9,6 @@ These include:
 
 You can find a full example in [`example.tex`](example.tex)/[`example.pdf`](example.pdf).
 
-If you have any question, please send an e-mail to `luisdaniel.casais [at] alumnos.uc3m.es`.
 
 
 ## Usage
