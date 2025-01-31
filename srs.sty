@@ -22,6 +22,7 @@
 \RequirePackage{booktabs}  % \toprule, \bottomrule
 \RequirePackage{enumitem}
 \RequirePackage{etoolbox}
+\RequirePackage{ifthen}
 
 
 % PACKAGE OPTIONS
@@ -674,15 +675,21 @@
 % <type> may be one of 'VAT' (validation) or 'VET' (verification)
 \newenvironment{testCase}[7]
   {
-    \translateIDs{#7}
+    \setID{#1}{#2}
+    % VET correspond to FN, VAT to NF
+    \ifthenelse{\equal{#1}{VET}}{
+      \translateIDs{\@req@s@prefix}{#7}%
+    }{}
+    \ifthenelse{\equal{#1}{VAT}}{
+      \translateIDs{\@req@u@prefix}{#7}%
+    }{}
     \xdef\@@test@origin{\@@translate@buf}
-    \def\@@test@id{#1-#2}
+    \def\@@test@id{\useID{#1-#2}}
     \def\@@test@precond{#3}
     \def\@@test@postcond{#4}
     \def\@@test@desc{#5}
     \def\@@test@eval{#6}
     \traceability@addOrigins{\@@test@id}{\@@test@origin}
-    % \SRStabular{#1}
     \if@captions@pp
       \SRStabular[\@test~\@@test@id][test:\@@test@id][htb][.9]{\@@test@id}
     \else
