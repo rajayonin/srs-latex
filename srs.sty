@@ -607,7 +607,8 @@
   {
     \if@captions@pp
       % \SRStabular[\@component~`#1']{#1}
-      \SRStabular[\@component~`#1'][comp:#1]{#1}
+      \SRStabular[\@component~`#1'][req:#1]{#1}
+      % TODO: change req: label to comp: (requires modifying the __print_matrix lua function)
     \else
       \SRStabular{#1}
     \fi
@@ -691,7 +692,8 @@
     \def\@@test@eval{#6}
     \traceability@addOrigins{\@@test@id}{\@@test@origin}
     \if@captions@pp
-      \SRStabular[\@test~\@@test@id][test:\@@test@id][htb][.9]{\@@test@id}
+      \SRStabular[\@test~\@@test@id][req:\@@test@id][htb][.9]{\@@test@id}
+      % TODO: change req: label to test: (requires modifying the __print_matrix lua function)
     \else
       \SRStabular[][test:\@@test@id][htb][.9]{\@@test@id}
     \fi
@@ -739,10 +741,10 @@
 \newcommand{\ucref}[2][\@uc]{\hyperref[uc:\useID{\@uc@prefix-#2}]{#1 \useID{\@uc@prefix-#2}}}
 
 % \testref[prefix]{ID}
-\newcommand{\testref}[2][\@test]{\hyperref[test:\useID{#2}]{#1 \useID{#2}}}
+\newcommand{\testref}[2][\@test]{\hyperref[req:\useID{#2}]{#1 \useID{#2}}}
 
 % \compref[prefix]{ID}
-\newcommand{\compref}[2][\@component]{\hyperref[comp:#2]{#1 `#2'}}
+\newcommand{\compref}[2][\@component]{\hyperref[req:#2]{#1 `#2'}}
 
 
 \endinput
