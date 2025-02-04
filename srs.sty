@@ -562,7 +562,7 @@
 \newenvironment{useCase}[6]
   {
     \setID{\@uc@prefix}{#1}
-    \def\@@uc@precond{#4}\def\@@uc@postcond{#5}
+    \def\@@uc@precond{#5}\def\@@uc@postcond{#6}
     \def\@@uc@id{\useID{\@uc@prefix-#1}}
     \if@captions@pp
       \SRStabular[\@uc~\@@uc@id][uc:\@@uc@id][htb][.9]{\@@uc@id}
