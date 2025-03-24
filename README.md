@@ -135,7 +135,7 @@ We provide you with the most common traceability matrixes, easily accesible trou
 - `\traceabilityVATUR`: Traceability between validation tests and user requirements
 
 > [!IMPORTANT]
-> Remember to enable the `enableTraceability` option when importing the package.
+> Remember to set the `enableTraceability` option when importing the package.
 
 #### Custom matrixes
 To generate custom traceability matrixes, you can make use of the `\traceabilityPrintMatrix` command. This commands use [Lua Patterns](https://www.lua.org/pil/20.2.html) to search the _displayed_ IDs.
