@@ -23,6 +23,7 @@
 \RequirePackage{enumitem}
 \RequirePackage{etoolbox}
 \RequirePackage{ifthen}
+\RequirePackage{currfile}
 
 
 % PACKAGE OPTIONS
@@ -439,12 +440,23 @@
 
 \newcommand{\padtwo}[1]{\ifnum\value{#1}<10 0\fi\arabic{#1}}
 
+% https://tex.stackexchange.com/questions/17238/signalling-error-in-expandable-context
+\catcode`\:=11\relax
+\newcommand{\srs@error@aux}[1]
+  {\romannumeral \numexpr 0\@firstofone{\srs@error: #1}}
+\newcommand{\srs@error}[1]
+  {\expandafter\srs@error@aux\csname srs info: #1\endcsname}
+\catcode`\:=12\relax
+
+\newcommand{\srs@setid@error}[1]{\srs@error{Duplicate ID `#1' in \currfilename}}
+\newcommand{\srs@useid@error}[1]{\srs@error{Unknown ID `#1' in \currfilename}}
+
 % Create a new ID based on the prefix and reference name, using the format <PREFIX>-<N>
 % This is achieved by creating a new macro with the name <PREFIX>-<reference NAME>
 % that expands to <PREFIX>-<N>
-\newcommand\setID[2]{\newcounterOrIncrement{#1}\csxdef{#1-#2}{#1-\padtwo{#1}}}
+\newcommand\setID[2]{\ifcsdef{#1-#2}{\expandafter\srs@setid@error{#1-#2}}{\newcounterOrIncrement{#1}\csxdef{#1-#2}{#1-\padtwo{#1}}}}
 % Use the macro created by the command above
-\newcommand\useID[1]{\if@debug@pp#1\else\csuse{#1}\fi}
+\newcommand\useID[1]{\ifcsdef{#1}{\if@debug@pp#1\else\csuse{#1}\fi}{\expandafter\srs@useid@error{#1}}}
 
 % Translate a comma separated list of reference IDs to displayed IDs, using a
 % given prefix
