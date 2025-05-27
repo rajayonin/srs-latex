@@ -26,3 +26,5 @@
 *.glg
 *.gls
 creationdate.timestamp
+
+build/
