@@ -1,3 +1,12 @@
+> [!WARNING]
+> This project is archived and **no longer maintained**. You are free to fork it.
+>
+> In the meantime, may I suggest you use
+> [srs-typst](https://github.com/rajayonin/srs-typst) instead?
+> [Typst](https://typst.app) offers the same features as LaTeX, but with the
+> advantages of a better and more modern language. Similarly, my new package
+> offers more customization and features.
+
 # srs-latex
 Support for software engineering tasks in LaTeX2e.  
 These include:
@@ -9,6 +18,10 @@ These include:
 
 You can find a full example in [`example.tex`](example.tex)/[`example.pdf`](example.pdf).
 
+> [!IMPORTANT]
+> This package requires compilation with the [LuaTeX](https://www.luatex.org/) engine.
+> 
+> For more information, see [Compilation](#compilation).
 
 
 ## Usage
@@ -41,9 +54,9 @@ The general syntax of the user requirements is the following:
 \end{<type>}
 ```
 
-The general syntax is the following:
+The general syntax of the software requirements is the following:
 ```latex
-\begin{userReq}{<subtype>}{<id>}{<properties>}{<origin-list>}
+\begin{softwareReq}{<subtype>}{<id>}{<properties>}{<origin-list>}
   <description>
 \end{<type>}
 ```
@@ -153,7 +166,7 @@ The general syntax is:
 where `<options>` may include values for `[io]_offset=N` (skip N items/origins) and `[io]_count=N` (number of items/origins to typeset).
 
 > [!NOTE]
-> Note that in patterns, `-` is a special character an should be escaped, using `\37`.
+> Note that in patterns, `-` is a special character an should replaced by `\37`.
 
 
 ## Compilation
